@@ -12,7 +12,7 @@ while True:
     rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     output = face_mesh.process(rgb_frame)
     landmark_points = output.multi_face_landmarks
-    print(landmark_points)
+    #print(landmark_points)
     frame_h, frame_w, __ = frame.shape
     if landmark_points:
         landmarks = landmark_points[0].landmark
@@ -29,7 +29,8 @@ while True:
             x = int(landmark.x * frame_w)
             y = int(landmark.y * frame_h)
             cv.circle(frame, (x, y), 3, (0, 255, 255))
-        if (left[0].y - left[1].y) < 0.004:
+            #print(left[0].y - left[1].y)
+        if (left[0].y - left[1].y) < 0.01:
             pyautogui.click()
             pyautogui.sleep(1)
                 
