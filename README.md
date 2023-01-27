@@ -1,2 +1,0 @@
-# Visionary
-Vigyaan Project
