@@ -1,28 +1,19 @@
 import sys
-
 import cv2
+from PySide6 import QtWidgets, QtCore
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
+from PySide6.QtGui import QIcon
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QImage, QPixmap, QIcon
-from PyQt5.QtWidgets import QDialog, QApplication
-from PyQt5.uic import loadUi
-
-
+loader = QUiLoader()
 class tehseencode(QDialog):
-    def __init__(self):
-        super(tehseencode, self).__init__()
-
-        loadUi('Start_Stop.ui', self)
-        self.logic = 0
-        self.value = 1
-        self.Start.clicked.connect(self.onClicked)
-        self.TEXT.setText('Kindly Press Start to open the Webcam :)')
+    def _init_(self):
+        self.setWindowTitle("Visionary")
         self.setWindowIcon(QIcon("logo.png"))
 
-    @pyqtSlot()
+    @QtCore.Slot()
     def onClicked(self):
-        self.TEXT.setText('Press Stop to Closeto Webcam :(')
+        self.TEXT.setText('Press Stop to Close to Webcam :(')
         cap = cv2.VideoCapture(0)
 
         while (cap.isOpened()):
@@ -36,29 +27,9 @@ class tehseencode(QDialog):
 
         cap.release()
         cv2.destroyAllWindows()
-
-    def displayImage(self, img, window=1):
-        qformat = QImage.Format_Indexed8
-
-        if len(img.shape) == 3:
-            if (img.shape[2]) == 4:
-                qformat = QImage.Format_RGBA8888
-
-            else:
-                qformat = QImage.Format_RGB888
-        img = QImage(img, img.shape[1], img.shape[0], qformat)
-        img = img.rgbSwapped()
-        self.imgLabel.setPixmap(QPixmap.fromImage(img))
-        self.imgLabel.setAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-
-
-app = QApplication(sys.argv)
-window = tehseencode()
+        
+    
+app = QtWidgets.QApplication(sys.argv)
+window = loader.load("Start_Stop.ui", None)
 window.show()
-try:
-    sys.exit(app.exec_())
-except:
-    print('exiting')
-
-window.close()
+app.exec()
