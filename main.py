@@ -98,7 +98,3 @@ class BackEnd:
     
     def stop(self):
         self.f = False
-
-a=BackEnd()
-a.function()
-
