@@ -2,12 +2,15 @@ import cv2 as cv
 import mediapipe as mp
 import numpy as np
 import pyautogui
+import time
 class BackEnd:
 
     def __init__(self) -> None:
+        self.f=False
         pass
     
     def function(self):
+        self.f=True
         face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks = True)
         self.capture =  cv.VideoCapture(0)
         screen_w, screen_h = pyautogui.size()
@@ -15,7 +18,8 @@ class BackEnd:
         f1, f2 = True, True
         scale = 25
 
-        while True:
+        while self.f:
+
             _, frame = self.capture.read()
             frame = cv.flip(frame, 1)
 
@@ -52,7 +56,7 @@ class BackEnd:
                     x = int(landmark.x * frame_w)
                     y = int(landmark.y * frame_h)
                     cv.circle(frame, (x, y), 3, (0, 255, 255))
-                    print(left[0].y - left[1].y, 'left')
+                    #print(left[0].y - left[1].y, 'left')
                     #print(fl, f1)
                 if (left[0].y - left[1].y) < 0.02:
                     if fl and f1:
@@ -93,8 +97,4 @@ class BackEnd:
         cv.destroyAllWindows()
     
     def stop(self):
-        self.capture.release()
-        cv.destroyAllWindows()
-
-a=BackEnd()
-a.function()
+        self.f = False
