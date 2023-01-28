@@ -17,12 +17,12 @@ class tehseencode(QDialog):
         self.logic = 0
         self.value = 1
         self.Start.clicked.connect(self.onClicked)
-        self.TEXT.setText('Kindly Press Start')
+        self.TEXT.setText('Kindly Press Start to open the Webcam :)')
         self.setWindowIcon(QIcon("logo.png"))
 
     @pyqtSlot()
     def onClicked(self):
-        self.TEXT.setText('Press Stop to Close!')
+        self.TEXT.setText('Press Stop to Closeto Webcam :(')
         cap = cv2.VideoCapture(0)
 
         while (cap.isOpened()):
