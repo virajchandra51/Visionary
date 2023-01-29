@@ -129,7 +129,7 @@ class Ui_Visionary(object):
         self.TEXT.setFont(font1)
         self.image_label = QLabel(self.frame_3)
         self.image_label.setObjectName(u"image_label")
-        self.image_label.setGeometry(QRect(10, 50, 1041, 731))
+        self.image_label.setGeometry(QRect(10, 50, 1041, 710))
         self.image_label.setFrameShape(QFrame.Box)
         self.image_label.setFrameShadow(QFrame.Raised)
         self.image_label.setLineWidth(5)
