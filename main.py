@@ -4,7 +4,6 @@ import numpy as np
 import pyautogui
 import time
 class BackEnd:
-
     def __init__(self) -> None:
         self.f=False
         pass

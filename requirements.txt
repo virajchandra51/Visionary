@@ -18,5 +18,6 @@ PySide6-Addons==6.4.2
 PySide6-Essentials==6.4.2
 PyRect==0.2.0
 PyScreeze==0.1.28
+qimage2ndarray==1.10.0
 mediapipe>=0.8.9; platform_system != "Darwin" and platform.machine != 'arm64'
 mediapipe-silicon>=0.8.9; platform_system == "Darwin" and platform.machine == 'arm64'
