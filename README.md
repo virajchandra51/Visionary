@@ -49,6 +49,8 @@ $ python3 Start.py
 6. Control Away! Move your Iris around for smooth mouse control. 
 We even added a left and right mouse functionality for you.😎
 
+
 7. Click Stop Webcam to turn off camera
+
 ![Visionary](./assets/img/stop.png)
 
