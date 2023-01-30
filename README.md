@@ -34,17 +34,17 @@ $ python3 Start.py
 
 3. Click Start Webcam to turn on camera
 
-![Visionary](./assets/img/start.png)
+![Visionary](./assets/start.png)
 
 4. Calibrate Left Eye
 
-![Visionary](./assets/img/3.png)
-![Visionary](./assets/img/4.png)
+![Visionary](./assets/3.png)
+![Visionary](./assets/4.png)
 
 5. Calibrate Right Eye
 
-![Visionary](./assets/img/5.png)
-![Visionary](./assets/img/6.png)
+![Visionary](./assets/5.png)
+![Visionary](./assets/6.png)
 
 6. Control Away! Move your Iris around for smooth mouse control. 
 We even added a left and right mouse functionality for you.😎
@@ -52,5 +52,5 @@ We even added a left and right mouse functionality for you.😎
 
 7. Click Stop Webcam to turn off camera
 
-![Visionary](./assets/img/stop.png)
+![Visionary](./assets/stop.png)
 
