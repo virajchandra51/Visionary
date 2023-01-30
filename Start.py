@@ -24,11 +24,18 @@ LHRight = [133]
 RHLeft = [362]
 RHRight = [263]
 scale = 25
-cnt_calibration = 0
+font = cv2.FONT_HERSHEY_SIMPLEX
+org = (200, 50)
+org1 = (130, 50)
+fontScale = 1
+color = (0, 0, 0)
+thickness = 2
+
 
 from MainWindow import Ui_Visionary
 
 class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
+    
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
@@ -37,15 +44,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.Start.pressed.connect(self.start_camera)
         self.Stop.pressed.connect(self.stop_camera)
         self.f = False
-        pass
+        self.cnt = 0
+        self.leftEyeCalibration, self.rightEyeCalibration = [], []
+        self.leftEyeClosed, self.rightEyeClosed = 0, 0
+        self.cntBlink = 0
+        my_pixmap = QPixmap("./logo.png")
+        my_icon = QIcon(my_pixmap)
+        self.setWindowIcon(my_icon)
+
     
     def stop_camera(self):
         self.TEXT.setText('Kindly Press Start to open the Webcam')
+        self.cntBlink = 0
         self.f = False
 
     def start_camera(self):
         """Initialize camera.
         """ 
+        self.cnt = 0
         self.f = True
         self.TEXT.setText('Kindly Press Stop to close the Webcam')
         self.capture = cv2.VideoCapture(0)
@@ -73,11 +89,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
             cropped = frame[minX:maxX, minY:maxY]
             frame = cv.resize(cropped, (width, height))
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            image = QImage(frame, frame.shape[1], frame.shape[0], 
-                            frame.strides[0], QImage.Format_BGR888)
-            self.image_label.setPixmap(QPixmap.fromImage(image))   
-            self.image_label.setAlignment(
-                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            
             output = face_mesh.process(rgb_frame)
             landmark_points = output.multi_face_landmarks
             frame_h, frame_w = frame.shape[:2]
@@ -111,28 +123,92 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                 p1, p2  = landmarks[477], landmarks[374]
                 cv.circle(frame, (int(xret), int(yret)), 3, (0,255,0))
                 cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
+                cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
+                
                 #print(p1.y * frame_h - p2.y * frame_h)
                 
                 #print(left[0].y - left[1].y, 'left')
+                
+                if self.cnt<=100:
+                    frame = cv2.putText(frame, 'Close left eye', org, font, 
+                   fontScale, color, thickness, cv2.LINE_AA)
+                    self.cnt+=1
+                
+                elif self.cnt<=200:
+                    a = 1
 
-                if p1.y * frame_h - p2.y * frame_h < 0:
-                    pyautogui.move(0, -30)
-                #cv.circle(frame, (xinit, yinit), 20, (0,255,0))
-                iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
-                if p1.y * frame_h - p2.y * frame_h < 0:
-                    iris_pos = 'up'
-                    pyautogui.move(0, -30)
-                if iris_pos == 'right':
-                    pyautogui.move(30,0)
-                elif iris_pos == 'left':
-                    pyautogui.move(-30,0)
+                    self.leftEyeCalibration.append(left[0].y-left[1].y)
+                    self.leftEyeClosed = max(self.leftEyeCalibration)
 
-                if (left[0].y - left[1].y) < 0.01 and (right[0].y - right[1].y) < 0.01:
-                    pyautogui.move(0,30)
+                    if a==1:
+                        frame = cv2.putText(frame, 'Close left eye : CALIBRATING', org1, font, 
+                       fontScale, color, thickness, cv2.LINE_AA)
+                    else:
+                        frame = cv2.putText(frame, 'Close left eye', org1, font, 
+                       fontScale, color, thickness, cv2.LINE_AA)
+                    if self.cnt%20==0: a=1-a
+                    self.cnt+=1
 
-                elif (left[0].y - left[1].y) < 0.01:
-                    pyautogui.click()
-                    pyautogui.sleep(1)
+                elif self.cnt<=300:
+                    frame = cv2.putText(frame, 'Close right eye', org, font, 
+                   fontScale, color, thickness, cv2.LINE_AA)
+                    self.cnt+=1
+                
+                elif self.cnt<=400:
+                    a=1
+
+                    self.rightEyeCalibration.append(right[0].y-right[1].y)
+                    self.rightEyeClosed = max(self.rightEyeCalibration)
+
+                    if a==1:
+                        frame = cv2.putText(frame, 'Close right eye: CALIBRATING', org1, font, 
+                   fontScale, color, thickness, cv2.LINE_AA)
+                    else:
+                        frame = cv2.putText(frame, 'Close right eye', org, font, 
+                   fontScale, color, thickness, cv2.LINE_AA)
+                    if self.cnt%20==0: a=1-a
+                    self.cnt+=1
+                
+                else:
+                    
+                    #cv.circle(frame, (xinit, yinit), 20, (0,255,0))
+                    iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
+                    if p1.y * frame_h - p2.y * frame_h < -0.8:
+                        iris_pos = 'up'
+                        pyautogui.move(0, -30)
+                    if iris_pos == 'right':
+                        pyautogui.move(30,0)
+                    elif iris_pos == 'left':
+                        pyautogui.move(-30,0)
+                    
+                    #print((left[0].y - left[1].y), self.leftEyeClosed, "left")
+                    #print((right[0].y - right[1].y), self.rightEyeClosed, "right")
+                    if (left[0].y - left[1].y) < self.leftEyeClosed and (right[0].y - right[1].y) < self.rightEyeClosed:
+                        self.cntBlink+=1
+                        if self.cntBlink>5:
+                            pyautogui.move(0,30)
+
+                    elif (left[0].y - left[1].y) < self.leftEyeClosed:
+                        self.cntBlink+=1
+                        if self.cntBlink>5:
+                            pyautogui.click()
+                            pyautogui.sleep(1)
+                        
+
+                    elif (right[0].y - right[1].y) < self.rightEyeClosed:
+                        self.cntBlink+=1
+                        if self.cntBlink>5:
+                            pyautogui.click(button='right')
+                            pyautogui.sleep(1)
+                    else:
+                        self.cntBlink = 0
+
+            image = QImage(frame, frame.shape[1], frame.shape[0], 
+                            frame.strides[0], QImage.Format_BGR888)
+            self.image_label.setPixmap(QPixmap.fromImage(image))   
+            self.image_label.setAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     
             
         else:
@@ -150,8 +226,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         ratio2 = center_bot_diff / top_bot_diff
 
         iris_position = ""
-        print(ratio1)
-        if ratio1<=0.40:
+        #print(ratio1)
+        if ratio1<=0.38:
             iris_position = "right"
         elif ratio1>0.60:
             iris_position = "left"
@@ -171,4 +247,4 @@ app = QtWidgets.QApplication(sys.argv)
 
 window = MainWindow()
 window.show()
-app.exec_()
+app.exec()
