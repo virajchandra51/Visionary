@@ -100,14 +100,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                 p1, p2  = landmarks[477], landmarks[374]
                 cv.circle(frame, (int(xret), int(yret)), 3, (0,255,0))
                 cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
-                print(p1.y * frame_h - p2.y * frame_h)
+                #print(p1.y * frame_h - p2.y * frame_h)
                 
                 #print(left[0].y - left[1].y, 'left')
 
                 if p1.y * frame_h - p2.y * frame_h < 0:
                     pyautogui.move(0, -30)
                 #cv.circle(frame, (xinit, yinit), 20, (0,255,0))
-                iris_pos = self.iris_position(self, [xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
+                iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
+                if p1.y * frame_h - p2.y * frame_h < 0:
+                    iris_pos = 'up'
+                    pyautogui.move(0, -30)
                 if iris_pos == 'right':
                     pyautogui.move(30,0)
                 elif iris_pos == 'left':
@@ -118,7 +121,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
 
                 elif (left[0].y - left[1].y) < 0.01:
                     pyautogui.click()
-                    
                     pyautogui.sleep(1)
                     
             
@@ -137,7 +139,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         ratio2 = center_bot_diff / top_bot_diff
 
         iris_position = ""
-        if ratio1<=0.37:
+        print(ratio1)
+        if ratio1<=0.40:
             iris_position = "right"
         elif ratio1>0.60:
             iris_position = "left"
@@ -146,7 +149,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
 
         return iris_position
     
-    def distance(point1, point2):
+    def distance(self, point1, point2):
         x1, y1 = point1
         x2, y2 = point2
         distance = math.sqrt((x2-x1)**2+(y2-y1)**2)
