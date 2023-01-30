@@ -1,3 +1,4 @@
+from MainWindow import Ui_Visionary
 import sys
 import cv2
 import math
@@ -14,11 +15,13 @@ from PySide6.QtGui import QIcon, QImage, QPixmap
 from PySide6.QtUiTools import QUiLoader
 
 
-face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks = True)
-leftEye = [362, 382, 381, 381, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]
+face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
+leftEye = [362, 382, 381, 381, 374, 373, 390,
+    249, 263, 466, 388, 387, 386, 385, 384, 398]
 left_iris = [474, 475, 476, 477]
 right_iris = [469, 470, 471, 472]
-rightEye = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246]
+rightEye = [33, 7, 163, 144, 145, 153, 154,
+    155, 133, 173, 157, 158, 159, 160, 161, 246]
 LHLeft = [33]
 LHRight = [133]
 RHLeft = [362]
@@ -32,10 +35,8 @@ color = (0, 0, 0)
 thickness = 2
 
 
-from MainWindow import Ui_Visionary
-
 class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
-    
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
@@ -52,7 +53,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         my_icon = QIcon(my_pixmap)
         self.setWindowIcon(my_icon)
 
-    
     def stop_camera(self):
         self.TEXT.setText('Kindly Press Start to open the Webcam')
         self.cntBlink = 0
@@ -60,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
 
     def start_camera(self):
         """Initialize camera.
-        """ 
+        """
         self.cnt = 0
         self.f = True
         self.TEXT.setText('Kindly Press Stop to close the Webcam')
@@ -74,41 +74,48 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
         """
-        if self.f: 
-            self.image_label.setHidden(False)  
+        if self.f:
+            self.image_label.setHidden(False)
             _, frame = self.capture.read()
-            frame  = cv.flip(frame, 1)
+            frame = cv.flip(frame, 1)
             height, width, channels = frame.shape
 
-            centerX,centerY=int(height/2),int(width/2)
-            radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+            centerX, centerY = int(height/2), int(width/2)
+            radiusX, radiusY = int(scale*height/100), int(scale*width/100)
 
-            minX,maxX=centerX-radiusX,centerX+radiusX
-            minY,maxY=centerY-radiusY,centerY+radiusY
+            minX, maxX = centerX-radiusX, centerX+radiusX
+            minY, maxY = centerY-radiusY, centerY+radiusY
 
             cropped = frame[minX:maxX, minY:maxY]
             frame = cv.resize(cropped, (width, height))
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            
+
             output = face_mesh.process(rgb_frame)
             landmark_points = output.multi_face_landmarks
             frame_h, frame_w = frame.shape[:2]
             if landmark_points:
                 landmarks = landmark_points[0].landmark
 
-                xc1, yc1 = landmarks[475].x * frame_w, landmarks[475].y * frame_h
-                xc2, yc2 = landmarks[477].x * frame_w, landmarks[477].y * frame_h
-                #print(xc1+xc2)
+                xc1, yc1 = landmarks[475].x * \
+                    frame_w, landmarks[475].y * frame_h
+                xc2, yc2 = landmarks[477].x * \
+                    frame_w, landmarks[477].y * frame_h
+                # print(xc1+xc2)
                 xc, yc = (xc1+xc2)/2, (yc1+yc2)/2
                 xl, yl = landmarks[362].x * frame_w, landmarks[362].y * frame_h
                 xr, yr = landmarks[263].x * frame_w, landmarks[263].y * frame_h
-                xret, yret = landmarks[386].x * frame_w, landmarks[386].y * frame_h
-                xreb, yreb = landmarks[374].x * frame_w, landmarks[374].y * frame_h
-                xlet, ylet = landmarks[159].x * frame_w, landmarks[159].y * frame_h
-                xleb, yleb = landmarks[145].x * frame_w, landmarks[145].y * frame_h
+                xret, yret = landmarks[386].x * \
+                    frame_w, landmarks[386].y * frame_h
+                xreb, yreb = landmarks[374].x * \
+                    frame_w, landmarks[374].y * frame_h
+                xlet, ylet = landmarks[159].x * \
+                    frame_w, landmarks[159].y * frame_h
+                xleb, yleb = landmarks[145].x * \
+                    frame_w, landmarks[145].y * frame_h
                 landmark = landmarks[1]
                 """if f:
-                    xinit, yinit = int(landmark.x * frame_w), int(landmark.y * frame_h)
+                    xinit, yinit = int(
+                        landmark.x * frame_w), int(landmark.y * frame_h)
                     f=0
                 x = int(landmark.x * frame_w)
                 y = int(landmark.y * frame_h)
@@ -117,47 +124,57 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                 elif yinit - y > 20:
                     pyautogui.move(0, -30)"""
 
-                #477 159
+                # 477 159
                 left = [landmarks[145], landmarks[159]]
-                right =  [landmarks[374], landmarks[386]]
-                p1, p2  = landmarks[477], landmarks[374]
-                cv.circle(frame, (int(xret), int(yret)), 3, (0,255,0))
-                cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
-                cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
-                cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
-                
-                #print(p1.y * frame_h - p2.y * frame_h)
-                
-                #print(left[0].y - left[1].y, 'left')
-                
-                if self.cnt<=100:
-                    frame = cv2.putText(frame, 'Close left eye', org, font, 
-                   fontScale, color, thickness, cv2.LINE_AA)
-                    self.cnt+=1
-                
-                elif self.cnt<=200:
-                    a = 1
+                right = [landmarks[374], landmarks[386]]
+                p1, p2 = landmarks[477], landmarks[374]
 
+                # print(p1.y * frame_h - p2.y * frame_h)
+
+                # print(left[0].y - left[1].y, 'left')
+
+                if self.cnt <= 100:
+                    frame = cv2.putText(frame, 'Close left eye', org, font,
+                   fontScale, color, thickness, cv2.LINE_AA)
+                    self.cnt += 1
+                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
+
+                elif self.cnt <= 200:
+                    a = 1
+                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
                     self.leftEyeCalibration.append(left[0].y-left[1].y)
                     self.leftEyeClosed = max(self.leftEyeCalibration)
 
-                    if a==1:
-                        frame = cv2.putText(frame, 'Close left eye : CALIBRATING', org1, font, 
+                    if a == 1:
+                        frame = cv2.putText(frame, 'Close left eye : CALIBRATING', org1, font,
                        fontScale, color, thickness, cv2.LINE_AA)
                     else:
-                        frame = cv2.putText(frame, 'Close left eye', org1, font, 
+                        frame = cv2.putText(frame, 'Close left eye', org1, font,
                        fontScale, color, thickness, cv2.LINE_AA)
-                    if self.cnt%20==0: a=1-a
-                    self.cnt+=1
+                    if self.cnt % 20 == 0: a = 1-a
+                    self.cnt += 1
 
-                elif self.cnt<=300:
+                elif self.cnt <= 300:
+                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
+                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
                     frame = cv2.putText(frame, 'Close right eye', org, font, 
-                   fontScale, color, thickness, cv2.LINE_AA)
+                    fontScale, color, thickness, cv2.LINE_AA)
                     self.cnt+=1
                 
                 elif self.cnt<=400:
                     a=1
-
+                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
+                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
                     self.rightEyeCalibration.append(right[0].y-right[1].y)
                     self.rightEyeClosed = max(self.rightEyeCalibration)
 
@@ -172,7 +189,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                 
                 else:
                     
-                    #cv.circle(frame, (xinit, yinit), 20, (0,255,0))
+                    # cv.circle(frame, (xinit, yinit), 20, (0,255,0))
                     iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
                     if p1.y * frame_h - p2.y * frame_h < -0.8:
                         iris_pos = 'up'
@@ -182,8 +199,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                     elif iris_pos == 'left':
                         pyautogui.move(-30,0)
                     
-                    #print((left[0].y - left[1].y), self.leftEyeClosed, "left")
-                    #print((right[0].y - right[1].y), self.rightEyeClosed, "right")
+                    # print((left[0].y - left[1].y), self.leftEyeClosed, "left")
+                    # print((right[0].y - right[1].y), self.rightEyeClosed, "right")
                     if (left[0].y - left[1].y) < self.leftEyeClosed and (right[0].y - right[1].y) < self.rightEyeClosed:
                         self.cntBlink+=1
                         if self.cntBlink>5:
@@ -226,7 +243,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         ratio2 = center_bot_diff / top_bot_diff
 
         iris_position = ""
-        #print(ratio1)
+        # print(ratio1)
         if ratio1<=0.38:
             iris_position = "right"
         elif ratio1>0.60:
