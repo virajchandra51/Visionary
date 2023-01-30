@@ -63,7 +63,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
             frame  = cv.flip(frame, 1)
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             image = QImage(frame, frame.shape[1], frame.shape[0], 
-                            frame.strides[0], QImage.Format_RGB888)
+                            frame.strides[0], QImage.Format_BGR888)
             self.image_label.setPixmap(QPixmap.fromImage(image))   
             self.image_label.setAlignment(
                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
