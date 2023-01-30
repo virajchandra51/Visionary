@@ -76,8 +76,7 @@
 <path style="fill:#5A8BB0;" d="M256,128c70.692,0,128,57.307,128,128s-57.308,128-128,128"/>
 <circle style="fill:#1E2E3B;" cx="256" cy="256" r="85.333"/>
 <g>
-	<circle style="fill:#FFFFFF;" cx="213.333" cy="298.667" r="42.667"/>
-	<circle style="fill:#FFFFFF;" cx="312.889" cy="199.111" r="28.444"/>
+	<circle style="fill:#fff;" cx="255" cy="255" r="42.667" class="ball"/>
 </g>
 </svg>
             </div>
@@ -205,19 +204,82 @@
                     </p>
                 </div>
             </div>
+            <div class="instructions">
+                <h1>*System Requirements - Python>=3.7 & <=3.10</h1> 
+                <h3>1. Download and unzip the software with respect to your Operating System from the links given below.</h3> 
+                <h3>2. Extract the zip file.</h3> 
+                <h3>3. Open your preferred CLI Terminal in the extracted folder, and execute the following commands with respect to your Operating System.</h3> 
+            </div>
+            <div class='K2_CBox'>
+                <div class='CB_Heading'>
+                    <div class="copy-upper">
+                        <span>Install Dependencies from CLI Terminal inside the root directory - WINDOWS
+                        </span>
+                        <button id='copy1' class='C_box_main' onclick="copyC('copy1','code1')">
+                          <i class='CBox_icn'></i>
+                        </button>
+                    </div>
+                  <div id='code1'>
+                    <pre>pip install -r requirements.txt</pre>
+                  </div>
+                </div>
+                <div class='CB_Heading'>
+                    <div class="copy-upper">
+                        <span>Execute the system from CLI Terminal inside the root directory - WINDOWS
+                        </span>
+                        <button id='copy2' class='C_box_main' onclick="copyC('copy2','code2')">
+                          <i class='CBox_icn'></i>
+                        </button>
+                    </div>
+                  <div id='code2'>
+                    <pre>python Start.py</pre>
+                  </div>
+                </div>
+                <div class='CB_Heading'>
+                    <div class="copy-upper">
+                        <span>Install Dependencies from CLI Terminal inside the root directory - MacOS
+                        </span>
+                        <button id='copy3' class='C_box_main' onclick="copyC('copy3','code3')">
+                          <i class='CBox_icn'></i>
+                        </button>
+                    </div>
+                  <div id='code3'>
+                    <pre>pip3 install -r requirements.txt</pre>
+                  </div>
+                </div>
+                <div class='CB_Heading'>
+                    <div class="copy-upper">
+                        <span>Execute the system from CLI Terminal inside the root directory - MacOS
+                        </span>
+                        <button id='copy4' class='C_box_main' onclick="copyC('copy4','code4')">
+                          <i class='CBox_icn'></i>
+                        </button>
+                    </div>
+                  <div id='code4'>
+                    <pre>python3 Start.py</pre>
+                  </div>
+                </div>
+            </div>
             <div class="download">
                 <table>
                     <tr id="table_header">
-                        <th>Download Here!</th>
-                        <th></th>
+                        <th>Operating System</th>
+                        <th>Download Link</th>
+                        <th>Working</th>
                     </tr>
                     <tr class="table-item">
                         <td>Windows </td>
-                        <td><a href="https://drive.google.com/uc?id=1B_9WQDbg65enZ62ejRZ3gPYkEzF7HpVz&export=download">Click Here!</a></td>
+                        <td><a href="https://drive.google.com/uc?id=1B_9WQDbg65enZ62ejRZ3gPYkEzF7HpVz&export=download">Click Here</a></td>
+                        <td>
+                            <a href="https://www.youtube.com/watch?v=CRG_h7QUrHA">Live Demo!</a>
+                        </td>
                     </tr>
                     <tr class="table-item"> 
-                      <td>MacOS </td>
-                      <td><a href="https://drive.google.com/uc?id=1AhthY4ZHjs60rW6XHzTibD_mXDp-gAHR&export=download">Click Here!</a></td>
+                        <td>MacOS </td>
+                        <td><a href="https://drive.google.com/uc?id=1AhthY4ZHjs60rW6XHzTibD_mXDp-gAHR&export=download">Click Here</a></td>
+                        <td>
+                        <a href="https://www.youtube.com/watch?v=CRG_h7QUrHA">Live Demo!</a>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -359,6 +421,7 @@
 
     <!--=============== MAIN JS ===============-->
     <script src="assets/js/main.js"></script>
+    <div id='toastNotif' class='tNtf'></div> 
 </body>
 
 </html>

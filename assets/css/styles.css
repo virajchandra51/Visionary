@@ -571,27 +571,28 @@ table {
 }
 
 tr {
-  transition: all .2s ease-in;
+  transition: all 0.2s ease-in;
   cursor: pointer;
 }
 
-th,td {
+th,
+td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-td a{
+td a {
   color: #000;
 }
 
-td a:hover{
+td a:hover {
   text-decoration: underline;
-  color: #78B9EB;
+  color: #78b9eb;
 }
 
 #table_header {
-  background-color: #78B9EB;
+  background-color: #78b9eb;
   color: #fff;
   text-align: center;
 }
@@ -603,7 +604,7 @@ td a:hover{
 
 @media only screen and (max-width: 768px) {
   table {
-      width: 90%;
+    width: 90%;
   }
 }
 /* Table Ends */
@@ -635,6 +636,181 @@ td a:hover{
 /* Show Scroll Up*/
 .show-scroll {
   bottom: 3rem;
+}
+
+/*=============================COPYCOMMANDS===================================*/
+.K2_CBox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #fff;
+  width: 100%;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  padding: 30px;
+  margin: 30px 0 30px;
+}
+.K2_CBox .CB_Heading {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+.K2_CBox .CB_Heading span {
+  margin: 0;
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 1.1rem;
+}
+.K2_CBox .C_box_main {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 12px;
+  outline: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #78b9eb;
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+}
+
+.instructions{
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.instructions h3{
+  padding: 4px;
+}
+
+.copy-upper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.K2_CBox .C_box_main:hover {
+  opacity: 0.8;
+}
+.K2_CBox .C_box_main .CBox_icn {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><rect x='5.54615' y='5.54615' width='16.45385' height='16.45385' rx='4'/><path d='M171.33311,181.3216v-8.45385a4,4,0,0,1,4-4H183.787' transform='translate(-169.33311 -166.86775)'/></svg>");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.K2_CBox .C_box_main.copied {
+  background: #2dcda7;
+}
+.K2_CBox .C_box_main.copied .CBox_icn {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><path d='M22 11.07V12a10 10 0 1 1-5.93-9.14'/><polyline points='23 3 12 14 9 11'/></svg>");
+}
+.K2_CBox pre {
+  margin: 0;
+  background: #f6f6f6;
+  padding: 15px;
+  border-radius: 5px;
+  color: #08102b;
+  font-size: 0.8rem;
+  font-family: monospace;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre-wrap;
+}
+.K2_CBox pre::before,
+.K2_CBox pre::after {
+  content: "";
+}
+.dark-Mode .K2_CBox {
+  background: #2d2d30;
+}
+.dark-Mode .K2_CBox pre {
+  background: #252526;
+  color: #fffdfc;
+}
+.tNtf span {
+  position: fixed;
+  left: 24px;
+  bottom: -70px;
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  z-index: 99981;
+  background: #323232;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 3px;
+  padding: 13px 24px;
+  box-shadow: 0 5px 35px rgba(149, 157, 165, 0.3);
+  opacity: 0;
+  transition: all 0.1s ease;
+  animation: slideinwards 2s ease forwards;
+  -webkit-animation: slideinwards 2s ease forwards;
+}
+@media screen and (max-width: 500px) {
+  .tNtf span {
+    margin-bottom: 20px;
+    left: 20px;
+    right: 20px;
+    font-size: 13px;
+  }
+}
+@keyframes slideinwards {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    bottom: 0;
+  }
+  50% {
+    opacity: 1;
+    bottom: 0;
+  }
+  80% {
+    opacity: 1;
+    bottom: 0;
+  }
+  100% {
+    opacity: 0;
+    bottom: -70px;
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes slideinwards {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    bottom: 0;
+  }
+  50% {
+    opacity: 1;
+    bottom: 0;
+  }
+  80% {
+    opacity: 1;
+    bottom: 0;
+  }
+  100% {
+    opacity: 0;
+    bottom: -70px;
+    visibility: hidden;
+  }
+}
+.darkMode .tNtf span {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
 /*=============== SCROLL BAR ===============*/
@@ -700,10 +876,10 @@ td a:hover{
   .app__buttons {
     grid-template-columns: max-content;
   }
-  .home__container{
+  .home__container {
     place-items: center;
   }
-  .contact__container{
+  .contact__container {
     place-items: center;
   }
 }
@@ -753,7 +929,7 @@ td a:hover{
   .team {
     flex-direction: column;
   }
-  .home__container{
+  .home__container {
     place-items: center;
   }
 }
@@ -764,10 +940,10 @@ td a:hover{
     margin-left: auto;
     margin-right: auto;
   }
-  .home__container{
+  .home__container {
     place-items: center;
   }
-  .main-img{
+  .main-img {
     width: 350px;
   }
   .home__container,
@@ -781,7 +957,7 @@ td a:hover{
   .team {
     flex-direction: column;
   }
-  .about__container{
+  .about__container {
     grid-template-columns: repeat(1, 1fr);
     place-items: center;
   }
@@ -823,7 +999,7 @@ td a:hover{
   .app__buttons {
     justify-content: initial;
   }
-  .team{
+  .team {
     flex-direction: column;
   }
 }
@@ -874,23 +1050,23 @@ td a:hover{
   .footer__social-link {
     font-size: 1.45rem;
   }
-  .team{
+  .team {
     flex-direction: column;
   }
 }
 
 @media screen and (min-width: 1024px) {
-  .main-img{
+  .main-img {
     width: 475px;
   }
-  .about__container{
+  .about__container {
     grid-template-columns: repeat(2, 1fr);
   }
-  .team{
+  .team {
     flex-direction: row;
   }
   .container {
-    max-width: 1200px;
+    max-width: 1120px;
     margin-left: auto;
     margin-right: auto;
   }
