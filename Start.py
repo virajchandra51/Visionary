@@ -23,6 +23,7 @@ LHLeft = [33]
 LHRight = [133]
 RHLeft = [362]
 RHRight = [263]
+cnt_left_click = 0
 
 from MainWindow import Ui_Visionary
 
@@ -59,62 +60,97 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         if self.f:
             self.image_label.setHidden(False)  
             _, frame = self.capture.read()
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.flip(frame, 1)
+            frame  = cv.flip(frame, 1)
+            rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             image = QImage(frame, frame.shape[1], frame.shape[0], 
                             frame.strides[0], QImage.Format_RGB888)
             self.image_label.setPixmap(QPixmap.fromImage(image))   
             self.image_label.setAlignment(
-                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter) 
-            face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks = True)
-            screen_w, screen_h = pyautogui.size()
-            fl, fr = False, False
-            f1, f2 = True, True
-            scale = 25
-            height, width, channels = frame.shape
-            centerX,centerY=int(height/2),int(width/2)
-            radiusX,radiusY= int(scale*height/100),int(scale*width/100)
-            minX,maxX=centerX-radiusX,centerX+radiusX
-            minY,maxY=centerY-radiusY,centerY+radiusY
-            cropped = frame[minX:maxX, minY:maxY]
-            frame = cv.resize(cropped, (width, height))
-            rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             output = face_mesh.process(rgb_frame)
             landmark_points = output.multi_face_landmarks
-            #print(landmark_points)
-            frame_h, frame_w, __ = frame.shape
+            frame_h, frame_w = frame.shape[:2]
             if landmark_points:
                 landmarks = landmark_points[0].landmark
-                for id, landmark in enumerate(landmarks[474:478]):
-                    x = int(landmark.x * frame_w)
-                    y = int(landmark.y * frame_h)
-                    cv.circle(frame, (x, y), 3, (0, 255, 0))
-                    if id == 1:
-                        screen_x = screen_w / frame_w * x
-                        screen_y = screen_h / frame_h * y
-                        pyautogui.moveTo(screen_x, screen_y)
+
+                xc1, yc1 = landmarks[475].x * frame_w, landmarks[475].y * frame_h
+                xc2, yc2 = landmarks[477].x * frame_w, landmarks[477].y * frame_h
+                #print(xc1+xc2)
+                xc, yc = (xc1+xc2)/2, (yc1+yc2)/2
+                xl, yl = landmarks[362].x * frame_w, landmarks[362].y * frame_h
+                xr, yr = landmarks[263].x * frame_w, landmarks[263].y * frame_h
+                xret, yret = landmarks[386].x * frame_w, landmarks[386].y * frame_h
+                xreb, yreb = landmarks[374].x * frame_w, landmarks[374].y * frame_h
+                xlet, ylet = landmarks[159].x * frame_w, landmarks[159].y * frame_h
+                xleb, yleb = landmarks[145].x * frame_w, landmarks[145].y * frame_h
+                landmark = landmarks[1]
+                """if f:
+                    xinit, yinit = int(landmark.x * frame_w), int(landmark.y * frame_h)
+                    f=0
+                x = int(landmark.x * frame_w)
+                y = int(landmark.y * frame_h)
+                if y - yinit > 25:
+                    pyautogui.move(0, 30)
+                elif yinit - y > 20:
+                    pyautogui.move(0, -30)"""
+
+                #477 159
                 left = [landmarks[145], landmarks[159]]
                 right =  [landmarks[374], landmarks[386]]
-                for landmark in left:
-                    x = int(landmark.x * frame_w)
-                    y = int(landmark.y * frame_h)
-                    cv.circle(frame, (x, y), 3, (0, 255, 255))
-                    #print(left[0].y - left[1].y, 'left')
-                    #print(fl, f1)
-                if (left[0].y - left[1].y) < 0.02:
-                    if fl and f1:
-                        pyautogui.mouseDown()
-                        f1=False
-                    elif not fl:
-                        pyautogui.click()
-                        fl=True
-                        #pyautogui.sleep(1)
-                elif fl and (left[0].y - left[1].y) > 0.02 and not f1:
-                    fl=False
-                    f1=True
-                    pyautogui.mouseUp()
+                p1, p2  = landmarks[477], landmarks[374]
+                cv.circle(frame, (int(xret), int(yret)), 3, (0,255,0))
+                cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                print(p1.y * frame_h - p2.y * frame_h)
+                
+                #print(left[0].y - left[1].y, 'left')
+
+                if p1.y * frame_h - p2.y * frame_h < 0:
+                    pyautogui.move(0, -30)
+                #cv.circle(frame, (xinit, yinit), 20, (0,255,0))
+                iris_pos = self.iris_position(self, [xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
+                if iris_pos == 'right':
+                    pyautogui.move(30,0)
+                elif iris_pos == 'left':
+                    pyautogui.move(-30,0)
+
+                if (left[0].y - left[1].y) < 0.01 and (right[0].y - right[1].y) < 0.01:
+                    pyautogui.move(0,30)
+
+                elif (left[0].y - left[1].y) < 0.01:
+                    pyautogui.click()
+                    
+                    pyautogui.sleep(1)
+                    
+            
         else:
-            self.image_label.setHidden(True)  
+            self.image_label.setHidden(True)
+            
+            
+    def iris_position(self, iris_center, right_point, left_point, top_point, bottom_point):
+        ctrd = self.distance(iris_center, right_point)
+        totald = self.distance(right_point, left_point)
+
+        center_bot_diff = self.distance(iris_center, bottom_point)
+        top_bot_diff = self.distance(top_point, bottom_point)
+
+        ratio1 = ctrd / totald
+        ratio2 = center_bot_diff / top_bot_diff
+
+        iris_position = ""
+        if ratio1<=0.37:
+            iris_position = "right"
+        elif ratio1>0.60:
+            iris_position = "left"
+        else:    
+            iris_position  = "center"
+
+        return iris_position
+    
+    def distance(point1, point2):
+        x1, y1 = point1
+        x2, y2 = point2
+        distance = math.sqrt((x2-x1)**2+(y2-y1)**2)
+        return distance     
 
 
 app = QtWidgets.QApplication(sys.argv)
