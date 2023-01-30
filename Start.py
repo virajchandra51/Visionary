@@ -23,7 +23,8 @@ LHLeft = [33]
 LHRight = [133]
 RHLeft = [362]
 RHRight = [263]
-cnt_left_click = 0
+scale = 25
+cnt_calibration = 0
 
 from MainWindow import Ui_Visionary
 
@@ -57,10 +58,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
         """
-        if self.f:
+        if self.f: 
             self.image_label.setHidden(False)  
             _, frame = self.capture.read()
             frame  = cv.flip(frame, 1)
+            height, width, channels = frame.shape
+
+            centerX,centerY=int(height/2),int(width/2)
+            radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+
+            minX,maxX=centerX-radiusX,centerX+radiusX
+            minY,maxY=centerY-radiusY,centerY+radiusY
+
+            cropped = frame[minX:maxX, minY:maxY]
+            frame = cv.resize(cropped, (width, height))
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             image = QImage(frame, frame.shape[1], frame.shape[0], 
                             frame.strides[0], QImage.Format_BGR888)
