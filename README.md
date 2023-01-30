@@ -43,8 +43,8 @@ $ python3 Start.py
 
 5. Calibrate Right Eye
 
-![Visionary](./assets/img/5.png)
-![Visionary](./assets/img/6.png)
+(./assets/img/5.png)
+(./assets/img/6.png)
 
 6. Control Away! Move your Iris around for smooth mouse control. 
 We even added a left and right mouse functionality for you.😎
