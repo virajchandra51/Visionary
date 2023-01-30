@@ -1,4 +1,4 @@
-# Visionary ![Visionary](./assets/img/logo.svg)
+# Visionary 👀
 
 **IRIS Movement Detection System**.
 
@@ -33,5 +33,6 @@ $ python3 Start.py
 ```
 
 3. Click Start Webcam
+
 ![Visionary](./assets/img/Preview1.png)
 
