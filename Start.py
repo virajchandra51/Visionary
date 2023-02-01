@@ -55,14 +55,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.setWindowIcon(my_icon)
         self.fl = False
         self.f2 = True
-        self.headControl = False
+        self.headControl = True
         self.Check.toggled.connect(self.head_control)
 
     def head_control(self):
-        if self.head_control:
-            self.head_control = False
+        if self.headControl:
+            self.headControl = False
         else:
-            self.head_control = True
+            self.headControl = True
         
     def stop_camera(self):
         self.TEXT.setText('Kindly Press Start to open the Webcam')
@@ -81,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.video_size.width())
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.video_size.height())
         self.timer = QTimer()
-        if self.head_control:
+        if self.headControl:
             self.timer.timeout.connect(self.display_video_stream)
         else:
             self.timer.timeout.connect(self.display_video_stream1)
@@ -150,6 +150,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
             self.image_label.setPixmap(QPixmap.fromImage(image))   
             self.image_label.setAlignment(
                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            
+        else:
+            self.image_label.setHidden(True)
 
 
 
