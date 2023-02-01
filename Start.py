@@ -49,9 +49,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.leftEyeCalibration, self.rightEyeCalibration = [], []
         self.leftEyeClosed, self.rightEyeClosed = 0, 0
         self.cntBlink = 0
+        self.f1 = False
         my_pixmap = QPixmap("./logo.png")
         my_icon = QIcon(my_pixmap)
         self.setWindowIcon(my_icon)
+        self.fl = False
+        self.f2 = True
         self.headControl = False
         self.Check.toggled.connect(self.head_control)
 
@@ -65,19 +68,90 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.TEXT.setText('Kindly Press Start to open the Webcam')
         self.cntBlink = 0
         self.f = False
+        self.f1 = False
 
     def start_camera(self):
         """Initialize camera.
         """
         self.cnt = 0
         self.f = True
+        self.f1 = True
         self.TEXT.setText('Kindly Press Stop to close the Webcam')
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.video_size.width())
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.video_size.height())
         self.timer = QTimer()
-        self.timer.timeout.connect(self.display_video_stream)
+        if self.head_control:
+            self.timer.timeout.connect(self.display_video_stream)
+        else:
+            self.timer.timeout.connect(self.display_video_stream1)
+
         self.timer.start(0)
+
+
+    def display_video_stream1(self):
+
+        if self.f1:
+            self.image_label.setHidden(False)
+            screen_w, screen_h = pyautogui.size()
+            
+            _, frame = self.capture.read()
+            frame = cv.flip(frame, 1)
+
+            height, width, channels = frame.shape
+
+            centerX,centerY=int(height/2),int(width/2)
+            radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+
+            minX,maxX=centerX-radiusX,centerX+radiusX
+            minY,maxY=centerY-radiusY,centerY+radiusY
+
+            cropped = frame[minX:maxX, minY:maxY]
+            frame = cv.resize(cropped, (width, height))
+            
+            rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+            output = face_mesh.process(rgb_frame)
+            landmark_points = output.multi_face_landmarks
+
+            frame_h, frame_w, __ = frame.shape
+            if landmark_points:
+                landmarks = landmark_points[0].landmark
+                for id, landmark in enumerate(landmarks[474:478]):
+                    x = int(landmark.x * frame_w)
+                    y = int(landmark.y * frame_h)
+                    cv.circle(frame, (x, y), 3, (0, 255, 0))
+                    if id == 1:
+                        screen_x = screen_w / frame_w * x
+                        screen_y = screen_h / frame_h * y
+                        pyautogui.moveTo(screen_x, screen_y)
+                left = [landmarks[145], landmarks[159]]
+                #right =  [landmarks[374], landmarks[386]]
+                for landmark in left:
+                    x = int(landmark.x * frame_w)
+                    y = int(landmark.y * frame_h)
+                    cv.circle(frame, (x, y), 3, (0, 255, 255))
+                    #print(left[0].y - left[1].y, 'left')
+                    #print(fl, f1)
+                if (left[0].y - left[1].y) < 0.02:
+                    if self.fl and self.f2:
+                        pyautogui.mouseDown()
+                        self.f2=False
+                    elif not self.fl:
+                        pyautogui.click()
+                        self.fl=True
+                        #pyautogui.sleep(1)
+                elif self.fl and (left[0].y - left[1].y) > 0.02 and not self.f2:
+                    self.fl=False
+                    self.f2=True
+                    pyautogui.mouseUp()
+
+            image = QImage(frame, frame.shape[1], frame.shape[0], 
+                            frame.strides[0], QImage.Format_BGR888)
+            self.image_label.setPixmap(QPixmap.fromImage(image))   
+            self.image_label.setAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+
+
 
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
