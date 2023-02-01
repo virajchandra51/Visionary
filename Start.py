@@ -52,7 +52,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         my_pixmap = QPixmap("./logo.png")
         my_icon = QIcon(my_pixmap)
         self.setWindowIcon(my_icon)
+        self.headControl = False
+        self.Check.toggled.connect(self.head_control)
 
+    def head_control(self):
+        if self.head_control:
+            self.head_control = False
+        else:
+            self.head_control = True
+        
     def stop_camera(self):
         self.TEXT.setText('Kindly Press Start to open the Webcam')
         self.cntBlink = 0

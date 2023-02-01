@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDialog, QFrame, QGridLayout,
     QLabel, QPushButton, QSizePolicy, QTextBrowser,
-    QWidget)
+    QWidget, QCheckBox)
 
 class Ui_Visionary(object):
     def setupUi(self, Visionary):
@@ -121,9 +121,12 @@ class Ui_Visionary(object):
 "	background-color: #aaaaaa;\n"
 "	color: #ffffff;\n"
 "}")
+        self.Check = QCheckBox(self.frame_3)
+        self.Check.setObjectName(u"Check")
+        self.Check.setGeometry(QRect(690, 10, 121, 31))
         self.TEXT = QTextBrowser(self.frame_3)
         self.TEXT.setObjectName(u"TEXT")
-        self.TEXT.setGeometry(QRect(10, 10, 721, 31))
+        self.TEXT.setGeometry(QRect(10, 10, 600, 31))
         font1 = QFont()
         font1.setFamilies([u"Helvetica"])
         self.TEXT.setFont(font1)
@@ -143,6 +146,7 @@ class Ui_Visionary(object):
         Visionary.setWindowTitle(QCoreApplication.translate("Visionary", u"Visionary", None))
         self.Start.setText(QCoreApplication.translate("Visionary", u"Start Webcam", None))
         self.Stop.setText(QCoreApplication.translate("Visionary", u"Stop Webcam", None))
+        self.Check.setText(QCoreApplication.translate("Visionary", u"Head Control", None))
         self.TEXT.setHtml(QCoreApplication.translate("Visionary", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
