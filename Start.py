@@ -69,6 +69,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.cntBlink = 0
         self.f = False
         self.f1 = False
+        self.capture.release()
+        cv.destroyAllWindows()
 
     def start_camera(self):
         """Initialize camera.
