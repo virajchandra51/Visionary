@@ -7,6 +7,7 @@ import mediapipe as mp
 import numpy as np
 import pyautogui
 import time
+from PIL import ImageEnhance
 from PySide6 import QtWidgets
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSize, QTimer
@@ -84,6 +85,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.video_size.height())
         self.timer = QTimer()
         if self.headControl:
+            self.at=[]
             self.timer.timeout.connect(self.display_video_stream)
         else:
             self.timer.timeout.connect(self.display_video_stream1)
@@ -114,9 +116,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
             rgb_frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             output = face_mesh.process(rgb_frame)
             landmark_points = output.multi_face_landmarks
-
+            
             frame_h, frame_w, __ = frame.shape
-            if landmark_points:
+            if self.brightness_image(frame)<=100:
+                    frame = cv2.putText(frame, 'LOW LIGHT', org, font, 
+                   fontScale, (255, 255, 255), thickness, cv2.LINE_AA)
+            
+            elif landmark_points:
                 landmarks = landmark_points[0].landmark
                 for id, landmark in enumerate(landmarks[474:478]):
                     x = int(landmark.x * frame_w)
@@ -162,6 +168,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         """Read frame from camera and repaint QLabel widget.
         """
         if self.f:
+            self.t1 = time.time()
             self.image_label.setHidden(False)
             _, frame = self.capture.read()
             frame = cv.flip(frame, 1)
@@ -219,8 +226,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                 # print(p1.y * frame_h - p2.y * frame_h)
 
                 # print(left[0].y - left[1].y, 'left')
+                if self.brightness_image(frame)<=100:
+                    frame = cv2.putText(frame, 'LOW LIGHT', org, font, 
+                   fontScale, (255, 255, 255), thickness, cv2.LINE_AA)
+                    #self.cnt = 0
 
-                if self.cnt <= 100:
+                elif self.cnt <= 100:
                     frame = cv2.putText(frame, 'Close left eye', org, font,
                    fontScale, color, thickness, cv2.LINE_AA)
                     self.cnt += 1
@@ -303,10 +314,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                     elif (right[0].y - right[1].y) < self.rightEyeClosed:
                         self.cntBlink+=1
                         if self.cntBlink>5:
+                            self.t2 = time.time()
                             pyautogui.click(button='right')
                             pyautogui.sleep(1)
                     else:
                         self.cntBlink = 0
+            
 
             image = QImage(frame, frame.shape[1], frame.shape[0], 
                             frame.strides[0], QImage.Format_BGR888)
@@ -345,6 +358,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
         x2, y2 = point2
         distance = math.sqrt((x2-x1)**2+(y2-y1)**2)
         return distance     
+    
+    def brightness_image(self, img):
+        
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        luminosity = np.mean(gray)
+
+        return luminosity
+
+
 
 
 app = QtWidgets.QApplication(sys.argv)
