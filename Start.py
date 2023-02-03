@@ -119,9 +119,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
             
             frame_h, frame_w, __ = frame.shape
             if self.brightness_image(frame)<=100:
-                    frame = cv2.putText(frame, 'LOW LIGHT', org, font, 
-                   fontScale, (255, 255, 255), thickness, cv2.LINE_AA)
-            
+                    frame = cv2.putText(frame, 'LOW LIGHT', org, font, fontScale, (255, 255, 255), thickness, cv2.LINE_AA)
             elif landmark_points:
                 landmarks = landmark_points[0].landmark
                 for id, landmark in enumerate(landmarks[474:478]):
@@ -230,95 +228,95 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Visionary):
                     frame = cv2.putText(frame, 'LOW LIGHT', org, font, 
                    fontScale, (255, 255, 255), thickness, cv2.LINE_AA)
                     #self.cnt = 0
-
-                elif self.cnt <= 100:
-                    frame = cv2.putText(frame, 'Close left eye', org, font,
-                   fontScale, color, thickness, cv2.LINE_AA)
-                    self.cnt += 1
-                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
-
-                elif self.cnt <= 200:
-                    a = 1
-                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
-                    self.leftEyeCalibration.append(left[0].y-left[1].y)
-                    self.leftEyeClosed = max(self.leftEyeCalibration)
-
-                    if a == 1:
-                        frame = cv2.putText(frame, 'Close left eye : CALIBRATING', org1, font,
-                       fontScale, color, thickness, cv2.LINE_AA)
-                    else:
-                        frame = cv2.putText(frame, 'Close left eye', org1, font,
-                       fontScale, color, thickness, cv2.LINE_AA)
-                    if self.cnt % 20 == 0: a = 1-a
-                    self.cnt += 1
-
-                elif self.cnt <= 300:
-                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
-                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
-                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
-                    frame = cv2.putText(frame, 'Close right eye', org, font, 
-                    fontScale, color, thickness, cv2.LINE_AA)
-                    self.cnt+=1
-                
-                elif self.cnt<=400:
-                    a=1
-                    cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
-                    cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
-                    cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
-                    cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
-                    self.rightEyeCalibration.append(right[0].y-right[1].y)
-                    self.rightEyeClosed = max(self.rightEyeCalibration)
-
-                    if a==1:
-                        frame = cv2.putText(frame, 'Close right eye: CALIBRATING', org1, font, 
-                   fontScale, color, thickness, cv2.LINE_AA)
-                    else:
-                        frame = cv2.putText(frame, 'Close right eye', org, font, 
-                   fontScale, color, thickness, cv2.LINE_AA)
-                    if self.cnt%20==0: a=1-a
-                    self.cnt+=1
-                
                 else:
-                    
-                    # cv.circle(frame, (xinit, yinit), 20, (0,255,0))
-                    iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
-                    if p1.y * frame_h - p2.y * frame_h < -0.8:
-                        iris_pos = 'up'
-                        pyautogui.move(0, -30)
-                    if iris_pos == 'right':
-                        pyautogui.move(30,0)
-                    elif iris_pos == 'left':
-                        pyautogui.move(-30,0)
-                    
-                    # print((left[0].y - left[1].y), self.leftEyeClosed, "left")
-                    # print((right[0].y - right[1].y), self.rightEyeClosed, "right")
-                    if (left[0].y - left[1].y) < self.leftEyeClosed and (right[0].y - right[1].y) < self.rightEyeClosed:
-                        self.cntBlink+=1
-                        if self.cntBlink>5:
-                            pyautogui.move(0,30)
+                    if self.cnt <= 100:
+                        frame = cv2.putText(frame, 'Close left eye', org, font,
+                    fontScale, color, thickness, cv2.LINE_AA)
+                        self.cnt += 1
+                        cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
 
-                    elif (left[0].y - left[1].y) < self.leftEyeClosed:
-                        self.cntBlink+=1
-                        if self.cntBlink>5:
-                            pyautogui.click()
-                            pyautogui.sleep(1)
-                        
+                    elif self.cnt <= 200:
+                        a = 1
+                        cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xreb), int(yreb)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xlet), int(ylet)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xleb), int(yleb)), 3, (0, 255, 0))
+                        self.leftEyeCalibration.append(left[0].y-left[1].y)
+                        self.leftEyeClosed = max(self.leftEyeCalibration)
 
-                    elif (right[0].y - right[1].y) < self.rightEyeClosed:
-                        self.cntBlink+=1
-                        if self.cntBlink>5:
-                            self.t2 = time.time()
-                            pyautogui.click(button='right')
-                            pyautogui.sleep(1)
+                        if a == 1:
+                            frame = cv2.putText(frame, 'Close left eye : CALIBRATING', org1, font,
+                        fontScale, color, thickness, cv2.LINE_AA)
+                        else:
+                            frame = cv2.putText(frame, 'Close left eye', org1, font,
+                        fontScale, color, thickness, cv2.LINE_AA)
+                        if self.cnt % 20 == 0: a = 1-a
+                        self.cnt += 1
+
+                    elif self.cnt <= 300:
+                        cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                        cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
+                        cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
+                        frame = cv2.putText(frame, 'Close right eye', org, font, 
+                        fontScale, color, thickness, cv2.LINE_AA)
+                        self.cnt+=1
+                    
+                    elif self.cnt<=400:
+                        a=1
+                        cv.circle(frame, (int(xret), int(yret)), 3, (0, 255, 0))
+                        cv.circle(frame, (int(xreb), int(yreb)), 3, (0,255,0))
+                        cv.circle(frame, (int(xlet), int(ylet)), 3, (0,255,0))
+                        cv.circle(frame, (int(xleb), int(yleb)), 3, (0,255,0))
+                        self.rightEyeCalibration.append(right[0].y-right[1].y)
+                        self.rightEyeClosed = max(self.rightEyeCalibration)
+
+                        if a==1:
+                            frame = cv2.putText(frame, 'Close right eye: CALIBRATING', org1, font, 
+                    fontScale, color, thickness, cv2.LINE_AA)
+                        else:
+                            frame = cv2.putText(frame, 'Close right eye', org, font, 
+                    fontScale, color, thickness, cv2.LINE_AA)
+                        if self.cnt%20==0: a=1-a
+                        self.cnt+=1
+                    
                     else:
-                        self.cntBlink = 0
+                        
+                        # cv.circle(frame, (xinit, yinit), 20, (0,255,0))
+                        iris_pos = self.iris_position([xc, yc] , [xr, yr] , [xl, yl] , [xret, yret] , [xreb, yreb])
+                        if p1.y * frame_h - p2.y * frame_h < -0.8:
+                            iris_pos = 'up'
+                            pyautogui.move(0, -30)
+                        if iris_pos == 'right':
+                            pyautogui.move(30,0)
+                        elif iris_pos == 'left':
+                            pyautogui.move(-30,0)
+                        
+                        # print((left[0].y - left[1].y), self.leftEyeClosed, "left")
+                        # print((right[0].y - right[1].y), self.rightEyeClosed, "right")
+                        if (left[0].y - left[1].y) < self.leftEyeClosed and (right[0].y - right[1].y) < self.rightEyeClosed:
+                            self.cntBlink+=1
+                            if self.cntBlink>5:
+                                pyautogui.move(0,30)
+
+                        elif (left[0].y - left[1].y) < self.leftEyeClosed:
+                            self.cntBlink+=1
+                            if self.cntBlink>5:
+                                pyautogui.click()
+                                pyautogui.sleep(1)
+                            
+
+                        elif (right[0].y - right[1].y) < self.rightEyeClosed:
+                            self.cntBlink+=1
+                            if self.cntBlink>5:
+                                self.t2 = time.time()
+                                pyautogui.click(button='right')
+                                pyautogui.sleep(1)
+                        else:
+                            self.cntBlink = 0
             
 
             image = QImage(frame, frame.shape[1], frame.shape[0], 
